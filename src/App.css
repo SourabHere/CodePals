@@ -1,38 +1,265 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.homePageWrapper{
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  color: #fff;
+  height: 100vh;
+  background-color: #0d0a20;
+}
+
+.formWrapper{
+  background: #282a36;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+}
+
+footer{
+  position: fixed;
+  bottom: 0;
+}
+
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainLabel {
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.homePageLogo {
+  height: 80px;
+  margin-bottom: 30px;
+}
+
+
+.inputBox {
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  margin-bottom: 14px;
+  background: #eee;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.btn {
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.joinBtn{
+  background: rgb(91, 195, 237);
+  width: 100px;
+  margin-left: auto;
+}
+
+.leaveBtn{
+  background-color: rgb(200, 5, 5);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.joinBtn:hover {
+  background: #4aed88;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.connected{
+  color: rgb(77, 228, 77);
+}
+
+.leaveBtn:hover{
+  background-color: red;
+}
+
+.createInfo {
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.createNewBtn {
+  color: #4aed88;
+  text-decoration: none;
+  border-bottom: 1px solid #4aed88;
+  transition: all 0.3s ease-in-out;
+}
+
+.createNewBtn:hover,
+footer a:hover {
+  color: #368654;
+  border-color: #368654;
+}
+
+
+.mainWrap{
+  display: grid;
+  /* grid-template-columns: 230px 1.2fr 1.5fr; */
+  grid-template-columns: 15% 52% 33%;
+  /* grid-template-columns: 230px 900px 0.5fr; */
+  /* display: flex;
+  flex-direction: row; */
+  height: 100vh;
+  
+}
+
+.aside{
+  color: white;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  /* background-color: #0d0a20; */
+  background-color: #080612;
+}
+
+.asideInner{
+  flex: 1;
+}
+
+.clientsList{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.client{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.userName{
+  margin-top: 10px;
+}
+
+.logo{
+  /* border-bottom: 1px solid black; */
+  padding-bottom: 10px;
+}
+
+.leaveBtn{
+  margin-top: 5px;
+  padding: 5px;
+}
+
+.copyBtn{
+  padding: 5px;
+}
+
+.CodeMirror{
+  /* height: 300px; */
+  /* min-height: calc(100vh - 20px); */
+  min-height: 100vh;
+  font-size: 15px;
+
+  /* width: 60%; */
+  /* width: 100%; */
+  /* padding-top: 20px; */
+
+}
+
+/* .editorWrap{
+  width: 100%;
+ 
+} */
+
+.chatWrap{
+  /* background-color: #fff; */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  /* background-color: #c0b8f8; */
+  background-color: #080612;
+}
+
+.homePageLogo{
+  height: 30%;
+  width: 40%;
+}
+
+.logoImage{
+  height: 30%;
+  width: 40%;
+  
+}
+
+@media (max-width: 950px) {
+	.mainWrap{
+    display: grid;
+    grid-template-columns: 15% 50% 35%;
+    height: 100vh;
+    
   }
-  to {
-    transform: rotate(360deg);
+
+  .snd{
+    font-size: 16px;
+    padding: 5px;
+    height: 30px;
   }
+  
+  .chat-form-container input[type='text'] { 
+    height: 18px;
+    width: 30px;
+  }
+
+}
+@media (max-width: 500px) {
+
+  .chat-messages .message{
+		font-size: 10px;
+	}
+
+  
+  .client{
+    width: 75%;
+  }
+  
+  .chat-form-container input[type='text'] { 
+    height: 18px;
+    width: 30px;
+    width: 60px;
+    font-size: 5px;
+
+  }
+
+  .mainWrap{
+    display: grid;
+    grid-template-columns: 18% 52% 30%;
+    height: 100vh;
+    
+  }
+
+  .copyBtn {
+    /* padding: 3px; */
+    font-size: 7px;
+  }
+  .leaveBtn{
+    /* padding: 3px; */
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 370px){
+  .chat-form-container form {
+    width: 75px;
+  }
+
+  
+
+  .chat-form-container input[type='text'] {
+    height: 18px;
+    width: 30px;
+    font-size: 5px;
+  }
+
 }
