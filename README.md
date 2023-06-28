@@ -52,6 +52,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 3. Install dependencies: `npm install`
 4. Start the server: `npm start`
 5. Open a web browser and visit: `http://localhost:3000`
+6. Start the backend server: `nodemon server.js`
 
 ## Usage
 
