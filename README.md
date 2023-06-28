@@ -29,42 +29,32 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Real-time code synchronization: Changes made by one user are instantly reflected in the code editor of all connected users within the same room.
+- Chat functionality: Users can send messages and communicate with each other through the chat interface.
+- User presence: Displaying the list of currently connected users in the room.
+- Room management: Users can create new rooms, join existing ones, and manage permissions or access control.
+- Syntax highlighting and code formatting: Enhances the coding experience with syntax highlighting and code formatting options.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Technologies Used
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Node.js: A JavaScript runtime environment for server-side development.
+- Express.js: A web application framework for Node.js, used for handling routing and server-side logic.
+- WebSockets: Enables real-time bidirectional communication between the server and the clients.
+- React.js: A JavaScript library for building user interfaces.
+- Other libraries or frameworks: [list any additional libraries or frameworks used]
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Installation
 
-## Learn More
+1. Clone the repository: `git clone https://github.com/your-username/your-project.git`
+2. Navigate to the project directory: `cd your-project`
+3. Install dependencies: `npm install`
+4. Start the server: `npm start`
+5. Open a web browser and visit: `http://localhost:3000`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Usage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Enter a unique username and a room ID to join an existing room or create a new one.
+2. Collaborate on coding projects by editing the code in the shared code editor.
+3. Use the chat interface to communicate with other users in the room.
