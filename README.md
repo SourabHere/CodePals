@@ -2,7 +2,7 @@
 
 <div align="center">
   <a>
-    <img src="https://github.com/beastrun12j/Price-Assist/blob/master/public/CodePals.png" alt="Logo" width="200">
+    <img src="https://github.com/SourabHere/public/CodePals.png" alt="Logo" width="200">
   </a>
 </div>
 
