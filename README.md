@@ -2,7 +2,7 @@
 
 <div align="center">
   <a>
-    <img src="https://github.com/SourabHere/public/CodePals.png" alt="Logo" width="200">
+    <img src="https://github.com/SourabHere/CodePals/blob/98db23d66e3aceb0dfd784167d5280ea508b7161/public/CodePals.png" alt="Logo" width="200">
   </a>
 </div>
 
