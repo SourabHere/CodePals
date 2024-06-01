@@ -91,7 +91,6 @@ const EditorPage = () => {
         return <Navigate to ="/"/>
     }
 
-
   return (
 
     <div className="mainWrap">
@@ -102,7 +101,7 @@ const EditorPage = () => {
 
                 <div className="logo">
 
-                    <img className='logoImage' src="/CodePals.png" alt="ni h image" />
+                    <img className='logoImage' src="/CodePals.png" alt="CodePals" />
 
                 </div>
 
@@ -111,7 +110,7 @@ const EditorPage = () => {
 
                     {
                         clients.map((client) => (
-                        <Client key = {client.socketId} username = {client.username}/>
+                        <Client key = {client.socketId} username = {client.userId}/>
                         
                     ))}
 
