@@ -1,4 +1,3 @@
-// const { Socket } = require("dgram");
 const moment = require('moment');
 const express = require("express");
 const app = express();
@@ -42,7 +41,6 @@ function getCurrentUser(id){
 }
 
 io.on("connection",(socket)=>{
-    // console.log("socket connected", socket.id);
 
     socket.on(ACTIONS.JOIN, ({roomId, username}) => {
         userSocketMap[socket.id] = username;
@@ -69,11 +67,8 @@ io.on("connection",(socket)=>{
     })
 
     socket.on("chatMessage", ({msg,roomId}) => {
-        // console.log('message ',msg);
-        // console.log('room id ',roomId);
-
+        
         const user = getCurrentUser(socket.id);
-        // console.log("user", user);
         io.to(roomId).emit("message", formatMessage(user,msg));
     });
 
@@ -87,9 +82,6 @@ io.on("connection",(socket)=>{
                 username: userSocketMap[socket.id],
             });
         });
-
-        // console.log(userSocketMap[socket.id]);
-
         delete userSocketMap[socket.id];
         socket.leave();
 

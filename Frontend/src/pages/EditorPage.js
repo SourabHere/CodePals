@@ -26,7 +26,6 @@ const EditorPage = () => {
             socketRef.current.on('connect_failed',(err) => handleErrors(err));
 
             function handleErrors(e){
-                // console.log("socket error", e);
                 toast.error("Socket connection failed, try again later");
                 reactNavigator('/');
             }
@@ -38,12 +37,10 @@ const EditorPage = () => {
 
 
             socketRef.current.on(ACTIONS.JOINED, ({clients,username,socketId}) =>{
-                // console.log(username);
                 if(username !== location.state?.username){
                     toast.success(`${username} joined the room`);
                 }
                 setClients(clients);
-                // console.log("This is cl ",clients);
                 socketRef.current.emit(ACTIONS.SYNC_CODE, {
                     code: codeRef.current,
                     socketId,
@@ -52,7 +49,6 @@ const EditorPage = () => {
             });
 
             socketRef.current.on(ACTIONS.DISCONNECTED,({socketId, username}) =>{
-                // console.log(username);
                 toast.success(`${username} left the room`);
 
                 setClients((prev) => {
