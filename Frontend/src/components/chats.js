@@ -9,17 +9,8 @@ export const Chats = ({socketRef,roomId}) => {
     const [msgid, setmsgid] = useState(0);
     const [Allmessages, setAllmessages] = useState([]);
 
-    // const chatMessage = document.querySelector('.chat-messages');
-    
-    // const scrollfunc = ()=>{
-    //   chatMessage.scrollTop = chatMessage.scrollHeight;
-    // }
-
     const chatMessagesRef = useRef(null);
 
-    // const scrollfunc = () => {
-    //   chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
-    // }
     const scrollfunc = () => {
       const chatMessages = chatMessagesRef.current;
       const scrollHeight = chatMessages.scrollHeight;
@@ -63,31 +54,12 @@ export const Chats = ({socketRef,roomId}) => {
       scrollfunc();
     }
 
-    // useEffect(() => {
-    //   if(socketRef.current){
-    //     socketRef.current.on('message', messages => {
-    //       // console.log(message);
-    //       setAllmessages([...Allmessages,messages]);
-
-    //       console.log(Allmessages);
-
-    //       // OutputMessage(message);
-    //     });
-
-    //     return () => {
-    //       socketRef.current.off('message') ;
-    //     }
-    //   }
-    // }, [message]);
-
-
     useEffect(() => {
       if (socketRef.current) {
         socketRef.current.on('message', message => {
           setAllmessages(prevMessages => [...prevMessages, message]);
         });
         
-        // console.log(Allmessages);
         return () => {
           socketRef.current.off('message');
         };
@@ -98,17 +70,6 @@ export const Chats = ({socketRef,roomId}) => {
     
   return (
     <div>
-
-        {/* <main className="chat-main">
-            
-            <div className="chat-messages">
-            </div>
-            {
-                Allmessages.map((msg) => (
-                <Message key={msg.id} username = {msg.username} time = {msg.time} mgs = {msg.text}/>
-                
-            ))}
-        </main> */}
 
         <main className="chat-main">
           <div className="chat-messages" ref={chatMessagesRef}>

@@ -26,7 +26,6 @@ const EditorPage = () => {
             socketRef.current.on('connect_failed',(err) => handleErrors(err));
 
             function handleErrors(e){
-                // console.log("socket error", e);
                 toast.error("Socket connection failed, try again later");
                 reactNavigator('/');
             }
@@ -38,12 +37,10 @@ const EditorPage = () => {
 
 
             socketRef.current.on(ACTIONS.JOINED, ({clients,username,socketId}) =>{
-                // console.log(username);
                 if(username !== location.state?.username){
                     toast.success(`${username} joined the room`);
                 }
                 setClients(clients);
-                // console.log("This is cl ",clients);
                 socketRef.current.emit(ACTIONS.SYNC_CODE, {
                     code: codeRef.current,
                     socketId,
@@ -52,7 +49,6 @@ const EditorPage = () => {
             });
 
             socketRef.current.on(ACTIONS.DISCONNECTED,({socketId, username}) =>{
-                // console.log(username);
                 toast.success(`${username} left the room`);
 
                 setClients((prev) => {
@@ -95,7 +91,6 @@ const EditorPage = () => {
         return <Navigate to ="/"/>
     }
 
-
   return (
 
     <div className="mainWrap">
@@ -106,7 +101,7 @@ const EditorPage = () => {
 
                 <div className="logo">
 
-                    <img className='logoImage' src="/CodePals.png" alt="ni h image" />
+                    <img className='logoImage' src="/CodePals.png" alt="CodePals" />
 
                 </div>
 
@@ -115,7 +110,7 @@ const EditorPage = () => {
 
                     {
                         clients.map((client) => (
-                        <Client key = {client.socketId} username = {client.username}/>
+                        <Client key = {client.socketId} username = {client.userId}/>
                         
                     ))}
 

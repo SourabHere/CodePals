@@ -22,7 +22,6 @@ const Editor = ({socketRef, roomId, onCodeChange}) => {
             });
 
             editorRef.current.on('change',(instance, changes) =>{
-                // console.log('changes', changes);
                 const {origin} = changes;
                 const code = instance.getValue();
 
@@ -38,8 +37,6 @@ const Editor = ({socketRef, roomId, onCodeChange}) => {
             });
 
             
-
-            // editorRef.current.setValue();
         }
 
         init();
@@ -59,7 +56,7 @@ const Editor = ({socketRef, roomId, onCodeChange}) => {
         }
 
         return () => {
-            // commenting below may solve an issue
+            
             socketRef.current.off(ACTIONS.CODE_CHANGE);
         }
 
