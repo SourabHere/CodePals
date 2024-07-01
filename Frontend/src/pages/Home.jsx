@@ -15,7 +15,6 @@ const Home = () => {
     e.preventDefault();
 
     const id = uuidv4();
-    // console.log(id);
 
     setRoomId(id);
 
@@ -39,8 +38,6 @@ const Home = () => {
   }
 
   const handleInputEnter = (e) =>{
-    // console.log(e.code);
-
     if(e.code === "Enter"){
       joinRoom();
     }
@@ -50,8 +47,6 @@ const Home = () => {
        <div className='formWrapper'>
 
         <img className='homePageLogo' src="/CodePalsSloBLess.png" alt="code-sync" />
-        {/* <img className='homePageLogo' src="/CodePals.png" alt="code-sync" /> */}
-        
 
         <h4 className='mainLabel'>Enter Username and ROOMID</h4>
 
