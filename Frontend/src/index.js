@@ -5,6 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ClerkProvider } from '@clerk/clerk-react'
 
+import { shadesOfPurple } from '@clerk/themes';
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
@@ -16,7 +19,11 @@ if (!PUBLISHABLE_KEY) {
 
 root.render(
   //<React.StrictMode>
-  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+  <ClerkProvider 
+  appearance={{
+    baseTheme: shadesOfPurple
+  }} 
+  publishableKey={PUBLISHABLE_KEY}>
      <App />
   </ClerkProvider>
   //</React.StrictMode>

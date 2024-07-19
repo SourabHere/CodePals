@@ -1,0 +1,51 @@
+.resolved{
+    background-color: #8584848c;
+}
+
+.comment-details-user-post{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-details-left{
+    display: flex;
+    gap: 10px;
+}
+
+.resolve-button {
+    background-color: #ff6347; /* Tomato color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+}
+
+.resolve-button:hover {
+    background-color: white;
+    color: #ff6347;
+    border: 2px solid #ff6347;
+}
+
+.resolved-button {
+    /* background-color: #4682b4; SteelBlue color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: not-allowed;
+    border-radius: 12px;
+    opacity: 1; /* Ensure the color is vibrant */
+}
+
+

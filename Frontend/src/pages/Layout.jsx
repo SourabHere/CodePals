@@ -48,7 +48,7 @@ const Layout = () => {
                 </li>
                 <li className="btns profilebtn">
                   <div>
-                    <UserButton afterSignOutUrl="/home" />
+                    <UserButton afterSignOutUrl="/" />
                   </div>
                 </li>
               </ul>

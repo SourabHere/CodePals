@@ -24,10 +24,10 @@ const Navbar = ({ triggerSetActiveList, activeList }) => {
           </li>
 
           <li onClick={() => handleClick(1)}>
-            <Link to="/home/profile" className="links">
+            <Link to="/home/userPosts" className="links">
               <div className="navwrap">
                 <div className={`Nav ${activeList === 1 ? "active" : ""}`}>
-                  <p>Profile</p>
+                  <p> My Threads </p>
                 </div>
                 <div
                   className={`whiteSpace ${activeList === 1 ? "active" : ""}`}
@@ -37,13 +37,26 @@ const Navbar = ({ triggerSetActiveList, activeList }) => {
           </li>
 
           <li onClick={() => handleClick(2)}>
-            <Link to="/home/settings" className="links">
+            <Link to="/home/profile" className="links">
               <div className="navwrap">
                 <div className={`Nav ${activeList === 2 ? "active" : ""}`}>
-                  <p>Settings</p>
+                  <p>Profile</p>
                 </div>
                 <div
                   className={`whiteSpace ${activeList === 2 ? "active" : ""}`}
+                ></div>
+              </div>
+            </Link>
+          </li>
+
+          <li onClick={() => handleClick(3)}>
+            <Link to="/home/settings" className="links">
+              <div className="navwrap">
+                <div className={`Nav ${activeList === 3 ? "active" : ""}`}>
+                  <p>Settings</p>
+                </div>
+                <div
+                  className={`whiteSpace ${activeList === 3 ? "active" : ""}`}
                 ></div>
               </div>
             </Link>

@@ -1,0 +1,121 @@
+.credit-dialog-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+}
+
+.disabled {
+    color: #888; 
+    opacity: 0.4;
+  }
+
+.credit-dialog {
+background: #2c2f48;
+color: #fff;
+border-radius: 10px;
+width: 35%;
+padding: 20px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.credit-dialog h3 {
+margin-top: 0;
+margin-bottom: 20px;
+text-align: center;
+color: #ffcc00;
+}
+
+.credit-dialog ul {
+list-style: none;
+padding: 0;
+max-height: 300px;
+overflow-y: auto;
+}
+
+.credit-dialog li {
+margin-bottom: 10px;
+}
+
+.credit-dialog label {
+display: flex;
+align-items: center;
+}
+
+.credit-dialog input[type="checkbox"] {
+margin-right: 10px;
+accent-color: #ffcc00;
+}
+
+.credit-dialog .user-info-credit {
+display: flex;
+align-items: center;
+}
+
+.user-info-credit{
+    width: 100%;
+}
+
+.credit-dialog .user-info-credit img {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+margin-right: 10px;
+}
+
+.credit-dialog .user-details-resolve {
+display: flex;
+}
+
+.user-details-resolve{
+    margin-left: 10px;
+    margin-right: 10px;
+    flex-direction: row;
+    width: 95%;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.credit-dialog .user-name {
+font-weight: bold;
+}
+
+.credit-dialog .join-date {
+font-size: 0.9em;
+color: #bbb;
+}
+
+.credit-dialog-footer {
+display: flex;
+justify-content: space-between;
+margin-top: 20px;
+}
+
+
+
+.credit-dialog-footer .credit-button,
+.credit-dialog-footer .cancel-button {
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-weight: bold;
+}
+
+.credit-dialog-footer .credit-button {
+background: #ffcc00;
+color: #2c2f48;
+}
+
+.credit-dialog-footer .cancel-button {
+background: #ff6b6b;
+color: #fff;
+}

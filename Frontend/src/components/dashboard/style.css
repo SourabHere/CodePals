@@ -86,6 +86,8 @@
   .user-name {
     font-size: 18px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
   }
   
   .comment-datetime {
@@ -185,3 +187,18 @@
     background-color: #e59420;
   }
   
+  .joinSpecifiedRoom{
+    font-size: 13px;
+    background: #4aed88;
+  }
+
+  .joinSpecifiedRoom:hover{
+    background: #3fcf6a;
+  }
+
+  .user-avatar {
+    width: 40px;  
+    height: 40px; 
+    border-radius: 50%; 
+    margin-right: 10px; 
+  }

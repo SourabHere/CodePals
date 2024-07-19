@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { Line, Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -13,6 +13,8 @@ import {
   BarElement,
 } from "chart.js";
 import "./profile/style.css";
+
+import { useAuth } from "@clerk/clerk-react";
 
 ChartJS.register(
   LineElement,
@@ -38,29 +40,111 @@ ChartJS.register(
 );
 
 const Profile = () => {
-  const user = {
-    name: "John Doe",
-    email: "abcd@gmail.com",
-    bio: "I am a software engineer",
-    location: "India",
-    github: "https://github.com/abcd",
-    linkedin: "https://linkedin.com/abcd",
-    twitter: "https://twitter.com/abcd",
-    communityStats: {
-      contributions: 15,
-      threads: 40,
-      reputations: 50,
-      highestStreak: 8,
-      currentStreak: 5,
-    },
-    languages: {
-      JavaScript: 40,
-      Python: 30,
-      Java: 15,
-      CSharp: 10,
-      Other: 5,
-    },
+  const [userData, setUserData] = useState(null);
+  const [streakData, setStreakData] = useState(null);
+  const [communityStats, setCommunityStats] = useState(null);
+  const [userLanguages, setUserLanguages] = useState(null);
+  const [weeklyGraphData, setWeeklyGraphData] = useState(null);
+  const [graphData, setGraphData] = useState(null);
+
+  const { userId } = useAuth();
+
+  const getPercentage = (value, total) => {
+    return ((value / total) * 100).toFixed(2);
   };
+
+  const formatDateToYYYYMMDD = (isoDate) => {
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${year}/${month}/${day}`;
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user1 = await fetch(`http://127.0.0.1:3456/api/users/${userId}`);
+
+      const result = await user1.json();
+
+      setUserData(result);
+    };
+
+    const fetchStreakData = async () => {
+      const streak = await fetch(
+        `http://127.0.0.1:3456/api/users/streaks/${userId}`
+      );
+
+      const result = await streak.json();
+
+      setStreakData(result);
+    };
+
+    const fetchPlotData = async () => {
+      const graphData = await fetch(
+        `http://127.0.0.1:3456/api/users/graphData/${userId}`
+      );
+
+      const result = await graphData.json();
+
+      let formattedLanguages = {};
+
+      let totalLang = 0;
+
+      for (let language of result["languages"]) {
+        totalLang += Number(language["count"]);
+      }
+
+      for (let language of result["languages"]) {
+        formattedLanguages[language["language"]] = getPercentage(
+          language["count"],
+          totalLang
+        );
+      }
+
+      setGraphData(result["contributions"]);
+      setUserLanguages(formattedLanguages);
+    };
+
+    const fetchContributions = async () => {
+      const dateTo = formatDateToYYYYMMDD(new Date().toISOString());
+      const dateFrom = formatDateToYYYYMMDD(
+        new Date(new Date().setDate(new Date().getDate() - 7)).toISOString()
+      );
+
+      console.log(dateFrom, dateTo);
+
+      const response = await fetch(
+        `http://127.0.0.1:3456/api/users/contributionsByDate/${userId}?dateFrom=${dateFrom}&dateTo=${dateTo}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = await response.json();
+      setWeeklyGraphData(result);
+    };
+
+    const fetchCommunityStats = async () => {
+      const response = await fetch(
+        `http://127.0.0.1:3456/api/users/community/${userId}`
+      );
+
+      const result = await response.json();
+
+      setCommunityStats(result);
+    };
+
+    fetchUserData();
+    fetchStreakData();
+    fetchPlotData();
+    fetchContributions();
+    fetchCommunityStats();
+  }, []);
 
   const monthlyOptions = {
     aspectRatio: 2.8,
@@ -101,11 +185,11 @@ const Profile = () => {
   };
 
   const pieData = {
-    labels: Object.keys(user.languages),
+    labels: userLanguages ? Object.keys(userLanguages) : {},
     datasets: [
       {
         label: "Languages Contributed",
-        data: Object.values(user.languages),
+        data: userLanguages ? Object.values(userLanguages) : {},
         backgroundColor: [
           "#FF6384",
           "#36A2EB",
@@ -124,20 +208,18 @@ const Profile = () => {
     ],
   };
 
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   const weeklyData = {
-    labels: [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ],
+    labels: daysOfWeek,
     datasets: [
       {
         label: "Weekly Contributions",
-        data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 10)),
+        data: daysOfWeek.map((day) =>
+          weeklyGraphData && weeklyGraphData[day]
+            ? weeklyGraphData[day].private + weeklyGraphData[day].public
+            : 0
+        ),
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgb(75, 192, 192)",
         borderWidth: 1,
@@ -149,19 +231,31 @@ const Profile = () => {
     <div className="profile-container">
       <div className="user-info">
         <div className="user-details">
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
-          <p>{user.bio}</p>
-          <p>{user.location}</p>
+          <h2>{userData ? userData.name : "__"}</h2>
+          <p>{userData ? userData.email : "__"}</p>
+          <p>{userData ? userData.bio : "__"}</p>
+          <p>{userData ? userData.location : "__"}</p>
         </div>
         <div className="user-links">
-          <a href={user.github} target="_blank" rel="noreferrer">
+          <a
+            href={userData ? userData.githubLink : "__"}
+            target="_blank"
+            rel="noreferrer"
+          >
             Github
           </a>
-          <a href={user.linkedin} target="_blank" rel="noreferrer">
+          <a
+            href={userData ? userData.linkedinLink : "__"}
+            target="_blank"
+            rel="noreferrer"
+          >
             LinkedIn
           </a>
-          <a href={user.twitter} target="_blank" rel="noreferrer">
+          <a
+            href={userData ? userData.twitterLink : "__"}
+            target="_blank"
+            rel="noreferrer"
+          >
             Twitter
           </a>
         </div>
@@ -169,9 +263,14 @@ const Profile = () => {
         <div className="community-stats">
           <h3>Community Stats</h3>
           <div className="stats">
-            <p>Contributions: {user.communityStats.contributions}</p>
-            <p>Threads: {user.communityStats.threads}</p>
-            <p>Reputations: {user.communityStats.reputations}</p>
+            <p>
+              Contributions:{" "}
+              {communityStats ? communityStats.contributions : "__"}
+            </p>
+            <p>Threads: {communityStats ? communityStats.threads : "__"}</p>
+            <p>
+              Reputations: {communityStats ? communityStats.reputations : "__"}
+            </p>
           </div>
         </div>
       </div>
@@ -179,19 +278,46 @@ const Profile = () => {
         <div className="contribution-box-container">
           <div className="contribution-box">
             <div className="contribution-card total-contribution">
-              <h1>{user.communityStats.contributions}</h1>
+              <h1>{streakData ? streakData.total_contributions : "__"}</h1>
               <h3>Total Contributions</h3>
-              <h3>Jul 1, 2021 - Present</h3>
+              <h3>
+                {streakData
+                  ? new Date(
+                      streakData.highest_streak_from
+                    ).toLocaleDateString()
+                  : "__"}{" "}
+                - Present
+              </h3>
             </div>
             <div className="contribution-card current-streak">
-              <h1>{user.communityStats.currentStreak}</h1>
+              <h1>{streakData ? streakData.current_streak : "__"}</h1>
               <h3>Current Streak</h3>
-              <h3>Jul 1, 2021 - Present</h3>
+              <h3>
+                {streakData
+                  ? new Date(
+                      streakData.current_streak_from
+                    ).toLocaleDateString()
+                  : "__"}{" "}
+                -{" "}
+                {streakData
+                  ? new Date(streakData.current_streak_to).toLocaleDateString()
+                  : "__"}
+              </h3>
             </div>
             <div className="contribution-card max-streak">
-              <h1>{user.communityStats.highestStreak}</h1>
+              <h1>{streakData ? streakData.highest_streak : "__"}</h1>
               <h3>Highest Streak</h3>
-              <h3>Jul 8, 2021 - Present</h3>
+              <h3>
+                {streakData
+                  ? new Date(
+                      streakData.highest_streak_from
+                    ).toLocaleDateString()
+                  : "__"}{" "}
+                -{" "}
+                {streakData
+                  ? new Date(streakData.highest_streak_to).toLocaleDateString()
+                  : "__"}
+              </h3>
             </div>
           </div>
         </div>
@@ -199,11 +325,15 @@ const Profile = () => {
         <div className="weekly-plots">
           <div className="weekly-plot">
             <h5>Weekly Contributions</h5>
-            <Bar data={weeklyData} />
+            {weeklyGraphData ? <Bar data={weeklyData} /> : <p>Loading...</p>}
           </div>
           <div className="yearly-piechart">
-            <h5>Languages Contributed This Year</h5>
-            <Pie data={pieData} options={pieOptions} />
+            <h5>Languages Contributed</h5>
+            {userLanguages ? (
+              <Pie data={pieData} options={pieOptions} />
+            ) : (
+              <p>Loading...</p>
+            )}
           </div>
         </div>
 

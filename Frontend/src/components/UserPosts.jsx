@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
 import "./dashboard/style.css";
+import "./userPosts/style.css";
 import { Link } from "react-router-dom";
 import { useUser, useAuth } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+import CreditUsersDialog from "./CreditUsersDialog";
 
-const DashboardHelper = () => {
+const UserPosts = () => {
   const { user } = useUser();
   const { userId } = useAuth();
 
-  const navigate = useNavigate();
-
   const [posts, setPosts] = useState([]);
   const [priorities, setPriorities] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [usersInRoom, setUsersInRoom] = useState([]);
+  const [isCreditDialogOpen, setIsCreditDialogOpen] = useState(false);
+
+  const [newComment, setNewComment] = useState("");
+  const [newRoomId, setNewRoomId] = useState("");
+  const [newType, setNewType] = useState("Help Needed");
+  const [newPriority, setNewPriority] = useState("Low");
+  const [newTags, setNewTags] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterTag, setFilterTag] = useState("");
+  const [filterPriority, setFilterPriority] = useState("");
+  const [sortByDate, setSortByDate] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
       const response = await fetch(
-        "http://localhost:3456/api/users/public/posts"
+        `http://localhost:3456/api/users/${userId}/posts`
       );
       const data = await response.json();
 
@@ -40,16 +52,6 @@ const DashboardHelper = () => {
     fetchPriorities();
   }, []);
 
-  const [newComment, setNewComment] = useState("");
-  const [newRoomId, setNewRoomId] = useState("");
-  const [newType, setNewType] = useState("Help Needed");
-  const [newPriority, setNewPriority] = useState("Low");
-  const [newTags, setNewTags] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filterTag, setFilterTag] = useState("");
-  const [filterPriority, setFilterPriority] = useState("");
-  const [sortByDate, setSortByDate] = useState(false);
-
   const formatDateTime = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -60,66 +62,94 @@ const DashboardHelper = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
-  const handleEnterRoom = (roomId, username) => {
-    const dateOfJoin = new Date().toISOString().split("T")[0];
+  const handleResolve = async (postId, roomId) => {
+    const response = await fetch(`http://localhost:3456/api/rooms/${roomId}`);
+    const data = await response.json();
+    setUsersInRoom(usersInRoom.concat(data));
 
-    fetch(`http://localhost:3456/api/rooms/${roomId}/${userId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ dateOfJoin }),
-    }).then((response) => {
-      navigate(`/editor/${roomId}`, {
-        state: {
-          username,
-          userId,
+    const post = posts.find((post) => post.id === postId);
+    setSelectedPost(post);
+    setIsCreditDialogOpen(true);
+  };
+
+  const creditUsersAndResolve = async (selectedUsers) => {
+    const promises = selectedUsers.map((selectedUserId) =>
+      fetch(`http://127.0.0.1:3456/api/users/community/${selectedUserId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      });
-    });
+      })
+    );
+
+    try {
+      await Promise.all(promises);
+
+      const updatedPosts = posts.map((post) =>
+        post.id === selectedPost.id ? { ...post, resolved: true } : post
+      );
+      setPosts(updatedPosts);
+
+      setIsCreditDialogOpen(false);
+      setSelectedPost(null);
+    } catch (error) {
+      console.error("Error crediting users:", error);
+    }
+
+    const resolvePost = await fetch(
+      `http://127.0.0.1:3456/api/posts/resolve/${userId}/${selectedPost.id}`,
+      {
+        method: "PATCH",
+      }
+    );
+
+    if (resolvePost.ok) {
+      console.log(`Resolved post ${selectedPost.id}`);
+    } else {
+      console.error("Error resolving post");
+      alert("Error resolving comment");
+    }
   };
 
   const handleAddPost = () => {
-    const newCommentObj = {
-      comment: newComment,
-      room_id: newRoomId,
-      date_time: formatDateTime(new Date()),
-      type: newType,
-      priority: newPriority,
-      tags: newTags.split(",").map((tag) => tag.trim()),
-    };
-
-    const newCommentObjFrontend = {
-      id: posts.length + 1,
-      name: user.fullName,
-      comment: newComment,
-      room_id: newRoomId,
-      date_time: new Date().toLocaleString(),
-      type: newType,
-      priority: newPriority,
-      tags: newTags.split(",").map((tag) => tag.trim()),
-    };
-
     fetch(`http://localhost:3456/api/users/${userId}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newCommentObj),
-    }).then((response) => {
-      if (response.ok) {
-        setPosts([...posts, newCommentObjFrontend]);
-      } else {
+      body: JSON.stringify({
+        comment: newComment,
+        room_id: newRoomId,
+        date_time: formatDateTime(new Date()),
+        type: newType,
+        priority: newPriority,
+        tags: newTags.split(",").map((tag) => tag.trim()),
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Error posting comment");
+        }
+      })
+      .then((newPost) => {
+        const newPostFormatted = {
+          ...newPost,
+          date_time: new Date(newPost.date_time).toLocaleString(),
+        };
+        setPosts([...posts, newPostFormatted]);
+        setIsModalOpen(false);
+        setNewComment("");
+        setNewRoomId("");
+        setNewType("Help Needed");
+        setNewPriority("Low");
+        setNewTags("");
+      })
+      .catch((error) => {
+        console.error("Error adding post:", error);
         alert("Error posting comment");
-      }
-    });
-
-    setNewComment("");
-    setNewRoomId("");
-    setNewType("Help Needed");
-    setNewPriority("Low");
-    setNewTags("");
-    setIsModalOpen(false);
+      });
   };
 
   const filteredPosts = posts.filter((post) => {
@@ -137,7 +167,7 @@ const DashboardHelper = () => {
   return (
     <div className="dashboard-helper">
       <div className="user-comments-bar">
-        <h2>Hi {user.firstName}, Check if you can help someone today!!</h2>
+        <h2>Hi {user.firstName}, Check out your posts!!</h2>
         <div className="buttons-container">
           <button
             className="post-comment-button"
@@ -166,7 +196,7 @@ const DashboardHelper = () => {
           </div>
 
           <Link to="/connect">
-            <button className="apply-filters-button"> Join Room </button>
+            <button className="apply-filters-button">Join Room</button>
           </Link>
         </div>
       </div>
@@ -174,7 +204,9 @@ const DashboardHelper = () => {
         {sortedPosts.map((post) => (
           <div
             key={post.id}
-            className={`comment-box priority-${post.priority.toLowerCase()}`}
+            className={`comment-box priority-${post.priority.toLowerCase()} ${
+              post.resolved ? "resolved" : ""
+            }`}
           >
             <div className="comment-header">
               <p className="user-name">
@@ -183,7 +215,7 @@ const DashboardHelper = () => {
                   alt={`${post.name}'s avatar`}
                   className="user-avatar"
                 />
-                {post.name}
+                You
               </p>
               <p className="comment-datetime">{post.date_time}</p>
             </div>
@@ -197,15 +229,21 @@ const DashboardHelper = () => {
                   <p className="room-id">Room ID: {post.room_id}</p>
                 )}
               </div>
-              <div>
-                <button
-                  className="btn joinBtn joinSpecifiedRoom"
-                  onClick={() => {
-                    handleEnterRoom(post.room_id, user.fullName);
-                  }}
-                >
-                  Enter Room
-                </button>
+
+              <div className="comment-details-right">
+                {!post.resolved && (
+                  <button
+                    className="resolve-button"
+                    onClick={() => handleResolve(post.id, post.room_id)}
+                  >
+                    Resolve
+                  </button>
+                )}
+                {post.resolved ? (
+                  <button className="resolved-button" disabled>
+                    Resolved
+                  </button>
+                ) : null}
               </div>
             </div>
           </div>
@@ -267,8 +305,18 @@ const DashboardHelper = () => {
           </div>
         </div>
       )}
+
+      {selectedPost && isCreditDialogOpen && (
+        <CreditUsersDialog
+          usersInRoom={usersInRoom}
+          currentUserId={userId}
+          setUsersInRoom={setUsersInRoom}
+          onCreditUsers={creditUsersAndResolve}
+          setIsCreditDialogOpen={setIsCreditDialogOpen}
+        />
+      )}
     </div>
   );
 };
 
-export default DashboardHelper;
+export default UserPosts;

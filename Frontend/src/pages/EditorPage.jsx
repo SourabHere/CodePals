@@ -21,6 +21,15 @@ const EditorPage = () => {
 
   const [clients, setClients] = useState([]);
 
+  const formatDateToYYYYMMDD = (isoDate) => {
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${year}/${month}/${day}`;
+  };
+
   useEffect(() => {
     const init = async () => {
       socketRef.current = await initSocket();
@@ -62,7 +71,29 @@ const EditorPage = () => {
       socketRef.current.on();
     };
 
+    const setContribution = async () => {
+      const userId = location.state?.userId;
+
+      if (userId) {
+        const response = await fetch(
+          `http://localhost:3456/api/users/contributions/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              roomId,
+              date: formatDateToYYYYMMDD(new Date().toISOString()),
+              type: "public",
+            }),
+          }
+        );
+      }
+    };
+
     init();
+    setContribution();
 
     return () => {
       socketRef.current.off(ACTIONS.JOINED);
@@ -81,7 +112,7 @@ const EditorPage = () => {
   }
 
   function leaveRoom() {
-    reactNavigator("/");
+    reactNavigator("/home/dashboard");
   }
 
   if (!location.state) {
